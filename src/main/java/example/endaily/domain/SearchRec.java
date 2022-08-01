@@ -14,7 +14,7 @@ public class SearchRec {
     @Id
     @GeneratedValue
     @Column(name = "search_rec_id")
-    private String id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "member_id")

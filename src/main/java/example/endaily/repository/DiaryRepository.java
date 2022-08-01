@@ -34,6 +34,7 @@ public class DiaryRepository {
                 .getSingleResult();
     }
 
+    // 이후 findAll()만 repository에 남기고 필터링 로직은 service로 올려보내기
     public List<Diary> findAllSortedByDate() {
         return em.createQuery("select d from Diary d", Diary.class)
                 .getResultList()
