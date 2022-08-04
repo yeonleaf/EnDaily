@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import MemberForm from "./MemberForm";
+import axios from "axios";
 
 const Login = () => {
     return (
@@ -11,16 +12,32 @@ class LoginComp extends Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleClick = this.handleClick.bind(this);
         this.state = {
             email: "",
             password: ""
         }
     }
 
-    handleSubmit(event) {
+    handleClick(event) {
         event.preventDefault();
-        console.log('login submit!')
+        const api = axios.create({
+            baseURL: "http://localhost:8080/api"
+        })
+
+        api.post('/member/login', {
+            email: this.state.email,
+            password: this.state.password
+        }).then(function(response) {
+            if (response.data) {
+                window.location = "/main"
+            } else {
+                document.getElementById("error").innerText = "없는 사용자이거나 비밀번호가 틀렸습니다."
+            }
+        }).catch(function(error) {
+            console.log(error);
+        })
+
     }
 
     handleChange(event) {
@@ -38,7 +55,8 @@ class LoginComp extends Component {
             <div>
                 <div>email: {this.state.email}</div>
                 <div>password: {this.state.password}</div>
-                <MemberForm email={this.state.email} password={this.state.password} onChange={this.handleChange} onSubmit={this.handleSubmit} />
+                <div id="error" name="error"></div>
+                <MemberForm email={this.state.email} password={this.state.password} onChange={this.handleChange} onClick={this.handleClick} />
             </div>
         );
     }
