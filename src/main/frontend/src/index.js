@@ -3,8 +3,20 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import axios from 'axios';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+axios.defaults.xsrfCookieName = 'XSRF-TOKEN';
+axios.defaults.xsrfHeaderName = 'X-XSRF-TOKEN';
+
+axios.interceptors.request.use(function(config) {
+    console.log(config);
+    return config;
+}, function (error) {
+    return Promise.reject(error);
+})
+
 root.render(
   <React.StrictMode>
     <App />
