@@ -29,7 +29,7 @@ class JoinComp extends Component {
             email: this.state.email,
             password: this.state.password
         }).then(function (response) {
-            console.log(response);
+            window.location = "/main";
         }).catch(function (error) {
             console.log(error);
         })
@@ -39,7 +39,6 @@ class JoinComp extends Component {
         const target = event.target;
         const value = target.value;
         const name = target.name;
-        console.log(target, name, value);
         this.setState({
             [name]: value
         });

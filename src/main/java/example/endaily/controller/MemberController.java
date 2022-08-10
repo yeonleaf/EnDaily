@@ -8,6 +8,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/member")
@@ -22,18 +26,17 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public boolean login(@RequestBody MemberDTO memberDTO) {
-        System.out.println("memberDTO = " + memberDTO);
+    public long login(@RequestBody MemberDTO memberDTO) {
         Member findMember;
         try {
             findMember = memberService.findOneByEmail(memberDTO.getEmail());
         } catch (EmptyResultDataAccessException eae) {
-            return false;
+            return -1;
         }
         if (!findMember.getPassword().equals(memberDTO.getPassword())) {
-            return false;
+            return -1;
         }
-        return true;
+        return findMember.getId();
     }
 
 }

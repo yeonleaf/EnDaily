@@ -29,8 +29,9 @@ class LoginComp extends Component {
             email: this.state.email,
             password: this.state.password
         }).then(function(response) {
-            if (response.data) {
-                window.location = "/main"
+            if (response.data != -1) {
+                sessionStorage.setItem("memberId", response.data);
+                window.location = "/main";
             } else {
                 document.getElementById("error").innerText = "없는 사용자이거나 비밀번호가 틀렸습니다."
             }
