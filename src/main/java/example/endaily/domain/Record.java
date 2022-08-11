@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SearchRec {
+public class Record {
     @Id
     @GeneratedValue
     @Column(name = "search_rec_id")
@@ -24,7 +24,7 @@ public class SearchRec {
     private String request;
     private LocalDate date;
 
-    public SearchRec(Member member, String word, String request, LocalDate date) {
+    public Record(Member member, String word, String request, LocalDate date) {
         this.member = member;
         this.word = word;
         this.request = request;

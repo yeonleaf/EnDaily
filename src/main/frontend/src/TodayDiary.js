@@ -2,6 +2,7 @@ import React, {Component, useEffect, useState} from "react";
 import axios from "axios";
 import dateFormatConverter from "./DateFormatConverter";
 import API from './API'
+import WordsSearch from "./WordsSearch";
 
 class TodayDiary extends Component {
 
@@ -130,6 +131,7 @@ function DiaryForm(props) {
             <div>
                 <button onClick={props.onClick}>Submit</button>
             </div>
+            <WordsSearch />
         </div>
     )
 }

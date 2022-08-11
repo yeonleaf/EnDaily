@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-class SearchBox extends Component {
+class DiarySearch extends Component {
     constructor(props) {
         super(props);
         this.handleSearchBtnClick = this.handleSearchBtnClick.bind(this);
@@ -44,4 +44,4 @@ function SearchForm(props) {
     )
 }
 
-export default SearchBox;
+export default DiarySearch;

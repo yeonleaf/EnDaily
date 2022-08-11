@@ -1,12 +1,12 @@
 import React, {Component} from "react";
 import {Route, Link} from "react-router-dom";
 import TodayDiary from "./TodayDiary"
-import SearchBox from "./SearchBox";
+import DiarySearch from "./DiarySearch";
 const Main = () => {
     return (
         <div>
             <TodayDiary />
-            <SearchBox />
+            <DiarySearch />
         </div>
     )
 }
