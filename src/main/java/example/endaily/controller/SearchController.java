@@ -1,7 +1,8 @@
 package example.endaily.controller;
-
+import example.endaily.error.MyBadDataException;
 import example.endaily.service.SearchService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -21,6 +22,10 @@ public class SearchController {
                 .uri("https://api.dictionaryapi.dev/api/v2/entries/en/" + target)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
+                .onStatus(
+                        HttpStatus.NOT_FOUND::equals,
+                        response -> Mono.error(new MyBadDataException(HttpStatus.NOT_FOUND))
+                )
                 .bodyToMono(String.class);
     }
 }

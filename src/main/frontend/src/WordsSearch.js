@@ -20,6 +20,7 @@ class SearchForm extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.state = {
+            cond: 0,
             word: "",
             meanings: []
         }
@@ -38,18 +39,27 @@ class SearchForm extends Component {
         let self = this;
         API.get("/search/word?target=" + this.state.word)
             .then(function(response) {
-                let meanings = response.data[0]["meanings"];
-                console.log(meanings);
+                console.log(response.status)
+                if (response.status == "OK") {
+                    let meanings = response.data[0]["meanings"];
+                    console.log(meanings);
+                    self.setState({
+                        cond: 1,
+                        meanings: meanings
+                    })
+                }
+            })
+            .catch(function(response) {
+                console.log("잘못된 단어 입력");
                 self.setState({
-                    meanings: meanings
+                    cond: 2
                 })
             })
-            .catch(function(response) {})
     }
 
     render() {
         let searchRes;
-        if (this.state.meanings) {
+        if (this.state.cond == 1) {
             searchRes = this.state.meanings.map((pos, idx1) => {
                 return (
                     <ul key={idx1}>
@@ -69,8 +79,10 @@ class SearchForm extends Component {
                     </ul>
                 )
             })
-        } else {
+        } else if (this.state.cond == 0) {
             searchRes = <div></div>
+        } else if (this.state.cond == 2) {
+            searchRes = <div>검색 결과가 없습니다. 다른 검색어를 입력해 주세요.</div>
         }
 
         return (
