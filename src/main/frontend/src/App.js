@@ -5,6 +5,7 @@ import Join from "./Join";
 import FrontPage from "./FrontPage";
 import Login from "./Login";
 import Main from "./Main";
+import SentenceSave from "./SentenceSave";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
                 <Route path="/join" element={<Join />}></Route>
                 <Route path="/login" element={<Login />}></Route>
                 <Route path="/main" element={<Main />}></Route>
+                <Route path="/sentence" element={<SentenceSave />}></Route>
             </Routes>
           </BrowserRouter>
       </div>

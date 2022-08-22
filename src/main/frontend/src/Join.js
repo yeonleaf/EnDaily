@@ -29,7 +29,7 @@ class JoinComp extends Component {
             email: this.state.email,
             password: this.state.password
         }).then(function (response) {
-            window.location = "/main";
+            window.location = "/login";
         }).catch(function (error) {
             console.log(error);
         })

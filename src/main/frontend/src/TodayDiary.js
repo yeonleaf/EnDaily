@@ -1,171 +1,91 @@
 import React, {Component, useEffect, useState} from "react";
-import axios from "axios";
-import dateFormatConverter from "./DateFormatConverter";
-import API from './API'
 import WordsSearch from "./WordsSearch";
+import TodayExpressions from "./TodayExpressions";
+import TodaySentences from "./TodaySentences";
+import API from "./API";
 
-class TodayDiary extends Component {
+function TodayDiary(props) {
 
-    constructor(props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-        this.state = {
-            date: "",
-            reference: "",
-            content: ""
-        }
-    }
+    let memberId = sessionStorage.getItem("memberId");
 
-    handleChange(event) {
-        let target = event.target;
-        let name = target.name;
-        let value = target.value;
-        this.setState({
-            [name]: value
-        })
-    }
+    const [sentenceList, setSentenceList] = useState([]);
 
-    componentDidMount() {
-        let self = this;
-        // 로그인 확인
-        let memberId = sessionStorage.getItem("memberId");
-        if (memberId === null) {
-            window.location = "/login"
-        }
-
-        // axios로 diary 데이터 가져오기
-        API.get("/diary?memberId=" + memberId + "&date=" + dateFormatConverter(new Date()))
+    useEffect(() => {
+        /*axios get -> date로 sentence list 조회*/
+        API.get("/sentence/sentences?memberId="+memberId+"&date="+props.date)
             .then(function(response) {
-                self.setState({
-                    date: response.data.date,
-                    reference: response.data.reference,
-                    content: response.data.content
-                });
+                console.log(response.data);
+                setSentenceList(response.data);
             })
-            .catch(function(error) {
-                console.log(error);
+            .catch(function(response) {
+                console.log(response);
             })
+    })
+
+    /*sentences 조회 결과에 따라 view를 분기 처리*/
+    let view;
+    if (!sentenceList) {
+        view = <div></div>
+    } else {
+        view = sentenceList.map((sentence) =>
+            <SentenceContent key={sentence.id} id={sentence.id} dictation={sentence.dictation} answer={sentence.answer} expressions={sentence.expressions} />
+        )
     }
 
-    render() {
-        let conditionRes;
-        if (this.state.date) {
-            conditionRes = <Diary date={this.state.date} content={this.state.content} reference={this.state.reference} />
-        } else {
-            conditionRes = <NotYet content={this.state.content} reference={this.state.reference} onChange={this.handleChange}/>
-        }
-        return (
-            <div>
-                {conditionRes}
-            </div>
-        );
-    }
-
-}
-
-class NotYet extends Component {
-    constructor(props) {
-        super(props);
-        this.showWriteForm = this.showWriteForm.bind(this);
-        this.state = {
-            writeWindow: false
-        }
-    }
-
-    showWriteForm() {
-        this.setState((state) => ({
-            writeWindow: !state.writeWindow
-        }))
-    }
-
-    render() {
-        let form;
-        if (this.state.writeWindow) {
-            form = <SaveDiary content={this.props.content} reference={this.props.reference} onChange={this.props.onChange}/>
-        } else {
-            form = <div></div>
-        }
-
-        return (
-          <div>
-              <h2>오늘은 아직 일기를 쓰지 않았습니다.</h2>
-              <button onClick={this.showWriteForm}>오늘 일기 쓰기</button>
-              {form}
-          </div>
-        );
-    }
-}
-
-function Diary(props) {
     return (
         <div>
+            <h3>Today's sentences!</h3>
             <div>
-                date: {props.date.toString()}
+                {view}
             </div>
             <div>
-                reference: {props.reference}
+                <button onClick={() => window.location = "/sentence"}>Sentence 추가</button>
             </div>
-            <div>
-                content: {props.content}
-            </div>
-        </div>
-    );
-}
-
-
-function DiaryForm(props) {
-    return (
-        <div>
-            <div>
-                <label>
-                    reference:
-                    <input type="text" name="reference" onChange={props.onChange}/>
-                </label>
-            </div>
-            <div>
-                <label>
-                    content:
-                </label>
-                <textarea name="content" onChange={props.onChange}></textarea>
-            </div>
-            <div>
-                <button onClick={props.onClick}>Submit</button>
-            </div>
-            <WordsSearch />
         </div>
     )
 }
 
-class SaveDiary extends Component {
 
-    constructor(props) {
-        super(props);
-        this.handleClick = this.handleClick.bind(this);
-    }
 
-    handleClick(event) {
-        event.preventDefault();
-        let memberId = sessionStorage.getItem("memberId");
-        if (memberId === null) {
-            window.location = "/login"
-        }
+function SentenceContent(props) {
 
-        event.preventDefault();
-        API.post("/diary/save", {
-            memberId: sessionStorage.getItem("memberId"),
-            date: dateFormatConverter(new Date()),
-            content: this.props.content,
-            reference: this.props.reference
-        }).then(function (response) {
-            window.location.reload();
-        }).catch(function (error) {
-            console.log(error);
-        })
-    }
+    let view = props.expressions.map((expression) => <li>
+        <ExpressionContent key={expression.id} id={expression.id} word={expression.word} exLine={expression.exLine} myLine={expression.myLine}/>
+    </li>)
 
-    render() {
-        return <DiaryForm onClick={this.handleClick} onChange={this.props.onChange}/>
-    }
+    return (
+        <div>
+            <div>
+                <h5>{props.id}번 sentence</h5>
+            </div>
+            <div>
+                Dictation: {props.dictation}
+            </div>
+            <div>
+                Answer: {props.answer}
+            </div>
+            <div>
+                {view}
+            </div>
+        </div>
+    )
+}
+
+
+function ExpressionContent(props) {
+    return (
+        <div>
+            <div>
+                <h6>Word: {props.word}</h6>
+            </div>
+            <div>
+                ExLine: {props.exLine}
+            </div>
+            <div>
+                MyLine: {props.myLine}
+            </div>
+        </div>
+    )
 }
 
 export default TodayDiary;

@@ -1,6 +1,5 @@
 package example.endaily.controller;
 import example.endaily.error.MyBadDataException;
-import example.endaily.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,8 +12,6 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/api/search")
 @RequiredArgsConstructor
 public class SearchController {
-
-    private final SearchService searchService;
 
     @GetMapping("/word")
     public Mono<String> getWordMeaning(@RequestParam(name = "target") String target) {

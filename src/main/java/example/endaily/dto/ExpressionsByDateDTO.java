@@ -7,9 +7,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class DiaryMemberDTO {
-    private long memberId;
+public class ExpressionsByDateDTO {
+    private Long memberId;
     private LocalDate date;
-    private String content;
-    private String reference;
 }

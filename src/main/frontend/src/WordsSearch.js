@@ -1,5 +1,4 @@
 import React, {Component, useEffect, useState} from "react";
-import axios from "axios";
 import API from "./API";
 
 class WordsSearch extends Component {
@@ -50,7 +49,6 @@ class SearchForm extends Component {
                 }
             })
             .catch(function(response) {
-                console.log("잘못된 단어 입력");
                 self.setState({
                     cond: 2
                 })
@@ -91,34 +89,6 @@ class SearchForm extends Component {
                 <input type="text" name="word" onChange={this.handleChange}/>
                 <button onClick={this.handleClick}>Search</button>
                 {searchRes}
-            </div>
-        )
-    }
-}
-
-
-class SearchRec extends Component {
-    constructor(props) {
-        super(props);
-        this.handleClick = this.handleClick.bind(this);
-        this.state = {
-            word: props.word,
-            meaning: "",
-            date: props.date,
-            request: props.request
-        }
-    }
-
-    handleClick(event) {
-        let uri = "https://glosbe.com/gapi/translate?from=eng&dest=kor&format=json&pretty=true&phase="
-        axios.get()
-    }
-
-    render() {
-        return (
-            <div>
-                <button onClick={this.handleClick}>{this.state.word}</button>
-                : {this.state.meaning}
             </div>
         )
     }
