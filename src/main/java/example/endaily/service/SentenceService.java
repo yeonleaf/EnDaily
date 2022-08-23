@@ -7,6 +7,7 @@ import example.endaily.domain.Sentence;
 import example.endaily.dto.ExpressionDTO;
 import example.endaily.dto.MemberDateDTO;
 import example.endaily.dto.MemberSentenceExpressionDTO;
+import example.endaily.dto.SentenceDTO;
 import example.endaily.repository.ExpressionRepository;
 import example.endaily.repository.MemberRepository;
 import example.endaily.repository.SentenceRepository;
@@ -54,7 +55,7 @@ public class SentenceService {
         return sentenceRepository.findOne(sentenceId);
     }
 
-    public HashMap<Sentence, List<ExpressionDTO>> findOneWithExpressionsToday(MemberDateDTO dto) {
+    public HashMap<SentenceDTO, List<ExpressionDTO>> findOneWithExpressionsToday(MemberDateDTO dto) {
         return sentenceRepository.findOneWithExpressionsToday(dto.getMemberId(), new StringToLocalDateConverter().convert(dto.getDate()));
     }
 }

@@ -5,6 +5,11 @@ import DateFormatConverter from "./DateFormatConverter";
 function TodayExpressions(props) {
     const [expressions, setExpressions] = useState([])
 
+    useEffect(() => {
+        console.log("TodayExpressions expressions:")
+        console.log(expressions);
+    })
+
     let date = DateFormatConverter(new Date());
 
     const addExpression = (data) => {
@@ -12,10 +17,11 @@ function TodayExpressions(props) {
     }
 
     const updateExpression = (data) => {
-        setExpressions(data);
+        setExpressions(prevState => [...data]);
     }
 
     const handleClick = () => {
+        console.log("Temporary Storage")
         props.handleExpressions(expressions);
     }
 

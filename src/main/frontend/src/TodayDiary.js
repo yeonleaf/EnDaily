@@ -1,7 +1,4 @@
 import React, {Component, useEffect, useState} from "react";
-import WordsSearch from "./WordsSearch";
-import TodayExpressions from "./TodayExpressions";
-import TodaySentences from "./TodaySentences";
 import API from "./API";
 
 function TodayDiary(props) {
@@ -14,22 +11,22 @@ function TodayDiary(props) {
         /*axios get -> date로 sentence list 조회*/
         API.get("/sentence/sentences?memberId="+memberId+"&date="+props.date)
             .then(function(response) {
-                console.log(response.data);
-                setSentenceList(response.data);
+                setSentenceList(prevState => [...prevState, response.data]);
             })
             .catch(function(response) {
                 console.log(response);
             })
-    })
+    }, [])
 
+    console.log(sentenceList);
     /*sentences 조회 결과에 따라 view를 분기 처리*/
     let view;
-    if (!sentenceList) {
+    if (sentenceList.length === 0 || Object.keys(sentenceList[0]).length === 0) {
         view = <div></div>
     } else {
-        view = sentenceList.map((sentence) =>
-            <SentenceContent key={sentence.id} id={sentence.id} dictation={sentence.dictation} answer={sentence.answer} expressions={sentence.expressions} />
-        )
+        view = Object.keys(sentenceList[0]).map((sentence, idx) => {
+            return <SentenceContent key={sentence.id} id={sentence.id} dictation={sentence.dictation} answer={sentence.answer} expressions={sentenceList[0][sentence]} />
+        });
     }
 
     return (

@@ -1,7 +1,5 @@
 package example.endaily.controller;
 
-import example.endaily.domain.Expression;
-import example.endaily.domain.Sentence;
 import example.endaily.dto.*;
 import example.endaily.service.SentenceService;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +18,14 @@ public class SentenceController {
 
     @PostMapping
     public void save(@RequestBody MemberSentenceExpressionDTO dto) {
-        System.out.println("dto.getMemberId() = " + dto.getMemberId());
         sentenceService.saveOneWithExpressions(dto);
     }
 
     @GetMapping("/sentences")
-    public HashMap<Sentence, List<ExpressionDTO>> findOneWithExpressionsToday(@RequestBody MemberDateDTO dto) {
+    public HashMap<SentenceDTO, List<ExpressionDTO>> findOneWithExpressionsToday(@RequestParam(name = "memberId") Long memberId, @RequestParam(name = "date") String date) {
+        MemberDateDTO dto = new MemberDateDTO();
+        dto.setMemberId(memberId);
+        dto.setDate(date);
         return sentenceService.findOneWithExpressionsToday(dto);
     }
 }

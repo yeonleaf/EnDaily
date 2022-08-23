@@ -49,10 +49,10 @@ class SentenceServiceTest {
         sentenceService.saveOneWithExpressions(mseDTO);
 
         //when
-        HashMap<Sentence, List<ExpressionDTO>> result = sentenceService.findOneWithExpressionsToday(make_memberDateDTO(findMember.getId(), "2022-08-19"));
+        HashMap<SentenceDTO, List<ExpressionDTO>> result = sentenceService.findOneWithExpressionsToday(make_memberDateDTO(findMember.getId(), "2022-08-19"));
 
         List<ExpressionDTO> expressionDTOList = new ArrayList<>();
-        for (Map.Entry<Sentence, List<ExpressionDTO>> entry : result.entrySet()) {
+        for (Map.Entry<SentenceDTO, List<ExpressionDTO>> entry : result.entrySet()) {
             expressionDTOList = entry.getValue();
         }
         //then

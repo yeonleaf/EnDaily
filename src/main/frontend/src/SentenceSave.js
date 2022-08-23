@@ -17,6 +17,11 @@ function SentenceSave(props) {
 
     const [expressions, setExpressions] = useState([])
 
+    useEffect(() => {
+        console.log("SentenceSave expressions:")
+        console.log(expressions);
+    })
+
     const handleDictation = (event) => {
         setDictation(event.target.value);
     }
@@ -26,8 +31,7 @@ function SentenceSave(props) {
     }
 
     const handleExpression = (data) => {
-        const copied = [...expressions, ...data];
-        setExpressions([...copied]);
+        setExpressions(prevState => [...prevState, ...data]);
     }
 
     const handleClick = () => {
@@ -35,7 +39,7 @@ function SentenceSave(props) {
     }
 
     const triggerSave = () => {
-        console.log(expressions);
+        console.log("Real Save!")
         let data = {
             memberId: memberId,
             date: DateFormatConverter(new Date()),
@@ -46,7 +50,7 @@ function SentenceSave(props) {
         console.log(data);
         API.post("/sentence", data).then((response) => {
             console.log("save success!")
-            window.location = "/main";
+            /*window.location = "/main";*/
         }).catch((error) => {
             console.log(error);
         })
