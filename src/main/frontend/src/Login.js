@@ -1,6 +1,5 @@
-import React, {Component} from "react";
-import MemberForm from "./MemberForm";
-import axios from "axios";
+import React, {Component, useState} from "react";
+import API from "./API";
 
 const Login = () => {
     return (
@@ -8,59 +7,74 @@ const Login = () => {
     )
 }
 
-class LoginComp extends Component {
-    constructor(props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleClick = this.handleClick.bind(this);
-        this.state = {
-            email: "",
-            password: ""
-        }
-    }
+function LoginComp(props) {
 
-    handleClick(event) {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const [emailMsg, setEmailMsg] = useState([]);
+    const [passwordMsg, setPasswordMsg] = useState([]);
+
+    function handleClick(event) {
         event.preventDefault();
-        const api = axios.create({
-            baseURL: "http://localhost:8080/api"
-        })
 
-        api.post('/member/login', {
-            email: this.state.email,
-            password: this.state.password
+        setEmailMsg([]);
+        setPasswordMsg([]);
+
+        API.post('/member/login', {
+            email: email,
+            password: password
         }).then(function(response) {
-            if (response.data != -1) {
-                sessionStorage.setItem("memberId", response.data);
-                window.location = "/main";
-            } else {
-                document.getElementById("error").innerText = "없는 사용자이거나 비밀번호가 틀렸습니다."
-            }
+            console.log(response.data);
+            sessionStorage.setItem("memberId", response.data);
+            window.location = "/main";
         }).catch(function(error) {
-            console.log(error);
+            let msgList = error.response.data.msgList;
+            console.log(msgList);
+            msgList.forEach(obj => {
+                if (obj.field === "email") {
+                    setEmailMsg(prevState => [...prevState, [obj.keyCnt, obj.errMsg]]);
+                } else {
+                    setPasswordMsg(prevState => [...prevState, [obj.keyCnt, obj.errMsg]]);
+                }
+            })
         })
 
     }
 
-    handleChange(event) {
-        const target = event.target;
-        const name = target.name;
-        const value = target.value;
-
-        this.setState({
-            [name]: value
-        });
+    function handleEmail(event) {
+        setEmail(event.target.value);
     }
 
-    render() {
-        return (
+    function handlePassword(event) {
+        setPassword(event.target.value);
+    }
+
+    let emailMsgBag = emailMsg.map(msg => <li key={msg[0]}>{msg[1]}</li>);
+    let passwordMsgBag = passwordMsg.map(msg => <li key={msg[0]}>{msg[1]}</li>);
+
+    return (
+        <div>
+            <div>Login!</div>
             <div>
-                <div>email: {this.state.email}</div>
-                <div>password: {this.state.password}</div>
-                <div id="error" name="error"></div>
-                <MemberForm email={this.state.email} password={this.state.password} onChange={this.handleChange} onClick={this.handleClick} />
+                <label>
+                    Email:
+                    <input type="text" name="email" defaultValue={email} onChange={handleEmail} />
+                    {emailMsgBag}
+                </label>
             </div>
-        );
-    }
+            <div>
+                <label>
+                    Password:
+                    <input type="password" name="password" defaultValue={password} onChange={handlePassword} />
+                    {passwordMsgBag}
+                </label>
+            </div>
+            <div>
+                <button type="button" onClick={handleClick}>Submit</button>
+            </div>
+        </div>
+    );
 }
 
 export default Login;

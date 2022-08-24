@@ -30,11 +30,11 @@ class MemberRepositoryTest {
 
     @Test
     public void findByEmail_Test() throws Exception {
-        //given
-        Member member = new Member("test@abc.co.kr", "123456");
-
-        //when
-        memberRepository.save(member);
+//        //given
+//        Member member = new Member("test@abc.co.kr", "123456");
+//
+//        //when
+//        memberRepository.save(member);
 
         //then
         Assertions.assertThat(memberRepository.findOneByEmail("test@abc.co.kr").getPassword()).isEqualTo("123456");

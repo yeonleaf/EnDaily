@@ -29,9 +29,7 @@ class SentenceServiceTest {
     public void saveOneWithExpressions_Test() throws Exception {
         //given
         /*member*/
-        MemberDTO member = new MemberDTO();
-        member.setEmail("abc@test.ac.kr");
-        member.setPassword("abc123!@#");
+        MemberDTO member = new MemberDTO("abc@test.ac.kr", "abc123!@#");
 
         memberService.save(member);
 

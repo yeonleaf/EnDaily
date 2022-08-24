@@ -1,6 +1,5 @@
-import React, {Component} from "react";
-import MemberForm from "./MemberForm";
-import axios from "axios";
+import React, {useState} from "react";
+import API from "./API";
 
 const Join = () => {
     return (
@@ -8,52 +7,69 @@ const Join = () => {
     )
 }
 
-class JoinComp extends Component {
-    constructor(props) {
-        super(props);
-        this.handleClick = this.handleClick.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.state = {
-            email: '',
-            password: ''
-        }
-    }
+function JoinComp(props) {
 
-    handleClick(event) {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const [emailMsg, setEmailMsg] = useState([]);
+    const [passwordMsg, setPasswordMsg] = useState([]);
+
+    function handleClick(event) {
         event.preventDefault();
-        console.log("clicked button")
-        const api = axios.create({
-            baseURL: "http://localhost:8080/api"
-        })
-        api.post('/member/join', {
-            email: this.state.email,
-            password: this.state.password
+        setEmailMsg([]);
+        setPasswordMsg([]);
+
+        API.post('/member/join', {
+            email: email,
+            password: password
         }).then(function (response) {
             window.location = "/login";
         }).catch(function (error) {
-            console.log(error);
+            let msgList = error.response.data.msgList;
+            msgList.forEach(obj => {
+                if (obj.field === "email") {
+                    setEmailMsg(prevState => [...prevState, [obj.keyCnt, obj.errMsg]]);
+                } else {
+                    setPasswordMsg(prevState => [...prevState, [obj.keyCnt, obj.errMsg]]);
+                }
+            })
         })
     }
 
-    handleChange(event) {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-        this.setState({
-            [name]: value
-        });
+    function handleEmail(event) {
+        setEmail(event.target.value);
     }
 
-    render() {
-        return (
-            <div>
-                <div>Join!</div>
-                <div>email: {this.state.email}</div>
-                <div>password: {this.state.password}</div>
-                <MemberForm email={this.state.email} password={this.state.password} onChange={this.handleChange} onClick={this.handleClick} />
-            </div>
-        );
+    function handlePassword(event) {
+        setPassword(event.target.value);
     }
+
+    let emailMsgBag = emailMsg.map(msg => <li key={msg[0]}>{msg[1]}</li>);
+    let passwordMsgBag = passwordMsg.map(msg => <li key={msg[0]}>{msg[1]}</li>);
+
+    return (
+        <div>
+            <div>Join!</div>
+            <div>
+                <label>
+                    Email:
+                    <input type="text" name="email" defaultValue={email} onChange={handleEmail} />
+                    {emailMsgBag}
+                </label>
+            </div>
+            <div>
+                <label>
+                    Password:
+                    <input type="password" name="password" defaultValue={password} onChange={handlePassword} />
+                    {passwordMsgBag}
+                </label>
+            </div>
+            <div>
+                <button type="button" onClick={handleClick}>Submit</button>
+            </div>
+        </div>
+    );
 }
 
 export default Join;

@@ -1,14 +1,8 @@
 import React, {Component, useEffect, useState} from "react";
-import API from "./API";
 import DateFormatConverter from "./DateFormatConverter";
 
 function TodayExpressions(props) {
     const [expressions, setExpressions] = useState([])
-
-    useEffect(() => {
-        console.log("TodayExpressions expressions:")
-        console.log(expressions);
-    })
 
     let date = DateFormatConverter(new Date());
 

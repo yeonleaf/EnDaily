@@ -15,12 +15,7 @@ function SentenceSave(props) {
     const [dictation, setDictation] = useState("");
     const [answer, setAnswer] = useState("");
 
-    const [expressions, setExpressions] = useState([])
-
-    useEffect(() => {
-        console.log("SentenceSave expressions:")
-        console.log(expressions);
-    })
+    const [expressions, setExpressions] = useState([]);
 
     const handleDictation = (event) => {
         setDictation(event.target.value);

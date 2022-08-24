@@ -27,7 +27,15 @@ public class MemberService {
         return memberRepository.findOneByEmail(email);
     }
 
+    public List<Member> findOneByEmail_NoException(String email) {
+        return memberRepository.findOneByEmail_NoException(email);
+    }
+
     public List<Member> findAll() {
         return memberRepository.findAll();
+    }
+
+    public MemberDTO getMember(String email) {
+        return new MemberDTO(memberRepository.findOneByEmail(email));
     }
 }
