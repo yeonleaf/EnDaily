@@ -24,9 +24,10 @@ function TodayDiary(props) {
     if (sentenceList.length === 0 || Object.keys(sentenceList[0]).length === 0) {
         view = <div></div>
     } else {
+        let count = 1;
         view = Object.keys(sentenceList[0]).map((sentenceKey, idx) => {
             const sentence = JSON.parse(sentenceKey);
-            return <SentenceContent key={sentence.id} sentenceId={sentence.id} dictation={sentence.dictation} answer={sentence.answer} expressions={sentenceList[0][sentenceKey]} />
+            return <SentenceContent key={sentence.id} sentenceId={count++} dictation={sentence.dictation} answer={sentence.answer} expressions={sentenceList[0][sentenceKey]} />
         });
     }
 

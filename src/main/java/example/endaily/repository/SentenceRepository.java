@@ -44,6 +44,7 @@ public class SentenceRepository {
                 .getResultList();
 
         resultList.stream().forEach(sentence -> result.put(gson.toJson(new SentenceDTO(sentence)), sentence.getExpressions().stream().map(expression -> new ExpressionDTO(expression)).collect(Collectors.toList())));
+        System.out.println("resultSize = " + result.size());
         return result;
     }
 
