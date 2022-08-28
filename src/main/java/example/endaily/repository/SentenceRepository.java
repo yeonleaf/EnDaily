@@ -1,5 +1,7 @@
 package example.endaily.repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import example.endaily.domain.Expression;
 import example.endaily.domain.Sentence;
 import example.endaily.dto.ExpressionDTO;
@@ -29,16 +31,19 @@ public class SentenceRepository {
         return em.find(Sentence.class, sentenceId);
     }
 
-    public HashMap<SentenceDTO, List<ExpressionDTO>> findOneWithExpressionsToday(Long memberId, LocalDate date) {
+    public HashMap<String, List<ExpressionDTO>> findOneWithExpressionsToday(Long memberId, LocalDate date) {
 
-        HashMap<SentenceDTO, List<ExpressionDTO>> result = new HashMap<>();
+        Gson gson = new Gson();
+
+
+        HashMap<String, List<ExpressionDTO>> result = new HashMap<>();
 
         List<Sentence> resultList = em.createQuery("select distinct s from Sentence s join fetch s.expressions where s.member.id = :memberId and s.date = :date", Sentence.class)
                 .setParameter("memberId", memberId)
                 .setParameter("date", date)
                 .getResultList();
 
-        resultList.stream().forEach(sentence -> result.put(new SentenceDTO(sentence), sentence.getExpressions().stream().map(expression -> new ExpressionDTO(expression)).collect(Collectors.toList())));
+        resultList.stream().forEach(sentence -> result.put(gson.toJson(new SentenceDTO(sentence)), sentence.getExpressions().stream().map(expression -> new ExpressionDTO(expression)).collect(Collectors.toList())));
         return result;
     }
 

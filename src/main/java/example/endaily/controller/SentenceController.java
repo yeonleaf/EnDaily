@@ -22,7 +22,7 @@ public class SentenceController {
     }
 
     @GetMapping("/sentences")
-    public HashMap<SentenceDTO, List<ExpressionDTO>> findOneWithExpressionsToday(@RequestParam(name = "memberId") Long memberId, @RequestParam(name = "date") String date) {
+    public HashMap<String, List<ExpressionDTO>> findOneWithExpressionsToday(@RequestParam(name = "memberId") Long memberId, @RequestParam(name = "date") String date) {
         MemberDateDTO dto = new MemberDateDTO();
         dto.setMemberId(memberId);
         dto.setDate(date);

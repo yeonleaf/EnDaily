@@ -24,8 +24,9 @@ function TodayDiary(props) {
     if (sentenceList.length === 0 || Object.keys(sentenceList[0]).length === 0) {
         view = <div></div>
     } else {
-        view = Object.keys(sentenceList[0]).map((sentence, idx) => {
-            return <SentenceContent key={sentence.id} id={sentence.id} dictation={sentence.dictation} answer={sentence.answer} expressions={sentenceList[0][sentence]} />
+        view = Object.keys(sentenceList[0]).map((sentenceKey, idx) => {
+            const sentence = JSON.parse(sentenceKey);
+            return <SentenceContent key={sentence.id} sentenceId={sentence.id} dictation={sentence.dictation} answer={sentence.answer} expressions={sentenceList[0][sentenceKey]} />
         });
     }
 
@@ -45,15 +46,15 @@ function TodayDiary(props) {
 
 
 function SentenceContent(props) {
-
-    let view = props.expressions.map((expression) => <li>
+    console.log(props.expressions);
+    let view = props.expressions.map((expression) => <li key={expression.id}>
         <ExpressionContent key={expression.id} id={expression.id} word={expression.word} exLine={expression.exLine} myLine={expression.myLine}/>
     </li>)
 
     return (
         <div>
             <div>
-                <h5>{props.id}번 sentence</h5>
+                <h5>{props.sentenceId}번 sentence</h5>
             </div>
             <div>
                 Dictation: {props.dictation}

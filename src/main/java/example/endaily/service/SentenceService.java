@@ -55,7 +55,7 @@ public class SentenceService {
         return sentenceRepository.findOne(sentenceId);
     }
 
-    public HashMap<SentenceDTO, List<ExpressionDTO>> findOneWithExpressionsToday(MemberDateDTO dto) {
+    public HashMap<String, List<ExpressionDTO>> findOneWithExpressionsToday(MemberDateDTO dto) {
         return sentenceRepository.findOneWithExpressionsToday(dto.getMemberId(), new StringToLocalDateConverter().convert(dto.getDate()));
     }
 }
