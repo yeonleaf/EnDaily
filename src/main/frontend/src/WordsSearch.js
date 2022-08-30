@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import API from "./API";
 import $ from 'jquery';
+import DateTimeFormatConverter from "./DateTimeFormatConverter";
 
 function WordsSearch(props) {
 
@@ -94,12 +95,10 @@ function SearchForm(props) {
 
     let searchBtn = word !== "" ? <button onClick={() => handleClick(word)}>Search</button> : <div></div>
 
-    console.log(records);
     let recordsView = records.map((record, _) => {
-        console.log(Date.parse(record.datetime));
         return (
             <div key={record.id}>
-                <span>{record.datetime}</span>
+                <span>{DateTimeFormatConverter(new Date(record.datetime))}</span>
                 <a onClick={()=> {
                     $("#word").val(record.word);
                     handleClick(record.word);
