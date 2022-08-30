@@ -3,6 +3,7 @@ import TodayExpressions from "./TodayExpressions";
 import DateFormatConverter from "./DateFormatConverter";
 import KoreanExistValidator from "./KoreanExistValidator";
 import API from "./API";
+import WordsSearch from "./WordsSearch";
 
 function SentenceSave(props) {
 
@@ -90,6 +91,8 @@ function SentenceSave(props) {
             <SentenceForm dictation={dictation} answer={answer} dictationMsg={dictationMsg} answerMsg={answerMsg} handleDictation={handleDictation} handleAnswer={handleAnswer} onClick={handleClick}/>
             {expressionWindow}
             {realSaveCond}
+
+            <WordsSearch />
         </div>
     )
 }

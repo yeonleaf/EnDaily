@@ -1,97 +1,126 @@
-import React, {Component, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import API from "./API";
+import $ from 'jquery';
 
-class WordsSearch extends Component {
-    constructor(props) {
-        super(props);
-    }
+function WordsSearch(props) {
 
-    render() {
-        return (
+    return (
+        <div>
             <SearchForm />
-        )
-    }
+        </div>
+    )
 }
 
-class SearchForm extends Component {
-    constructor(props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleClick = this.handleClick.bind(this);
-        this.state = {
-            cond: 0,
-            word: "",
-            meanings: []
+function SearchForm(props) {
+
+    const [cond, setCond] = useState(0);
+    const [word, setWord] = useState("");
+    const [meanings, setMeanings] = useState([]);
+
+    const [records, setRecords] = useState([]);
+    const [searchMsg, setSearchMsg] = useState("");
+
+    useEffect(() => {
+        let memberId = sessionStorage.getItem("memberId");
+        if (memberId === null) {
+            window.location = "/login";
         }
+
+        /*record 정보 갱신*/
+        API.get("/search/records?memberId=" + memberId)
+            .then((response) => {
+                if (response.data.length === 0) {
+                    setSearchMsg("최근 7일 동안의 검색 기록이 없습니다.");
+                } else {
+                    setSearchMsg("");
+                    setRecords(prevState => [...response.data])
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }, [meanings]);
+    
+    function handleWord(event) {
+        setWord(event.target.value);
     }
 
-    handleChange(event) {
-        let target = event.target;
-        let name = target.name;
-        let value = target.value;
-        this.setState({
-            [name]: value
-        })
-    }
+    function handleClick(data) {
+        let memberId = sessionStorage.getItem("memberId");
 
-    handleClick() {
-        let self = this;
-        API.get("/search/word?target=" + this.state.word)
+        if (memberId === null) {
+            window.location = "/login";
+        }
+
+        API.get("/search/word?memberId=" + memberId + "&target=" + data)
             .then(function(response) {
-                console.log(response.status)
-                if (response.status == "OK") {
+                if (response.status === 200) {
                     let meanings = response.data[0]["meanings"];
-                    console.log(meanings);
-                    self.setState({
-                        cond: 1,
-                        meanings: meanings
-                    })
+                    setCond(1);
+                    setMeanings(prevState => [...meanings]);
                 }
             })
             .catch(function(response) {
-                self.setState({
-                    cond: 2
-                })
+                setCond(2);
             })
     }
 
-    render() {
-        let searchRes;
-        if (this.state.cond == 1) {
-            searchRes = this.state.meanings.map((pos, idx1) => {
-                return (
-                    <ul key={idx1}>
-                        <h5>
-                            {pos.partOfSpeech}:
-                        </h5>
+    let searchRes;
+    if (cond === 1) {
+        searchRes = meanings.map((pos, idx1) => {
+            return (
+                <ul key={idx1}>
+                    <h5>
+                        {pos.partOfSpeech}:
+                    </h5>
 
-                        {
-                            pos.definitions.map((def, idx2) => {
-                                return (
-                                    <li key={idx2}>
-                                        {def.definition}
-                                    </li>
-                                )
-                            })
-                        }
-                    </ul>
-                )
-            })
-        } else if (this.state.cond == 0) {
-            searchRes = <div></div>
-        } else if (this.state.cond == 2) {
-            searchRes = <div>검색 결과가 없습니다. 다른 검색어를 입력해 주세요.</div>
-        }
+                    {
+                        pos.definitions.map((def, idx2) => {
+                            return (
+                                <li key={idx2}>
+                                    {def.definition}
+                                </li>
+                            )
+                        })
+                    }
+                </ul>
+            )
+        })
+    } else if (cond === 0) {
+        searchRes = <div></div>
+    } else if (cond === 2) {
+        searchRes = <div>검색 결과가 없습니다. 다른 검색어를 입력해 주세요.</div>
+    }
 
+    let searchBtn = word !== "" ? <button onClick={() => handleClick(word)}>Search</button> : <div></div>
+
+    console.log(records);
+    let recordsView = records.map((record, _) => {
+        console.log(Date.parse(record.datetime));
         return (
-            <div>
-                <h4>단어 검색</h4>
-                <input type="text" name="word" onChange={this.handleChange}/>
-                <button onClick={this.handleClick}>Search</button>
-                {searchRes}
+            <div key={record.id}>
+                <span>{record.datetime}</span>
+                <a onClick={()=> {
+                    $("#word").val(record.word);
+                    handleClick(record.word);
+                }}>{record.word}</a>
             </div>
-        )
-    }
+        );
+    })
+
+    return (
+        <div>
+            <h4>단어 검색</h4>
+            <input id="word" type="text" name="word" onChange={handleWord}/>
+            {searchBtn}
+            {searchRes}
+            <div>
+                <h5>검색 기록</h5>
+                {recordsView}
+                {searchMsg}
+            </div>
+        </div>
+    )
 }
 
 export default WordsSearch;

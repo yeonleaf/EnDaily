@@ -3,12 +3,14 @@ package example.endaily.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
-@Getter
+@Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Record {
     @Id
@@ -21,13 +23,11 @@ public class Record {
     private Member member;
 
     private String word;
-    private String request;
-    private LocalDate date;
+    private LocalDateTime datetime;
 
-    public Record(Member member, String word, String request, LocalDate date) {
+    public Record(Member member, String word, LocalDateTime datetime) {
         this.member = member;
         this.word = word;
-        this.request = request;
-        this.date = date;
+        this.datetime = datetime;
     }
 }
