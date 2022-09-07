@@ -62,7 +62,6 @@ function SentenceSave(props) {
     }
 
     const triggerSave = () => {
-        console.log("Real Save!")
         let data = {
             memberId: memberId,
             date: DateFormatConverter(new Date()),

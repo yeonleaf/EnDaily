@@ -1,11 +1,18 @@
 import React, {Component, useEffect, useState} from "react";
 import API from "./API";
+import DateFormatConverter from "./DateFormatConverter";
 
-function TodayDiary(props) {
+function Diary(props) {
 
     let memberId = sessionStorage.getItem("memberId");
 
+    if (memberId === null) {
+        window.location = "/login";
+    }
+
     const [sentenceList, setSentenceList] = useState([]);
+
+    console.log(props.date);
 
     useEffect(() => {
         /*axios get -> date로 sentence list 조회*/
@@ -16,29 +23,47 @@ function TodayDiary(props) {
             .catch(function(response) {
                 console.log(response);
             })
-    }, [])
+    }, [props.date])
 
-    console.log(sentenceList);
+
     /*sentences 조회 결과에 따라 view를 분기 처리*/
     let view;
     if (sentenceList.length === 0 || Object.keys(sentenceList[0]).length === 0) {
-        view = <div></div>
+        view = <div>데이터가 없습니다.</div>
     } else {
         let count = 1;
-        view = Object.keys(sentenceList[0]).map((sentenceKey, idx) => {
-            const sentence = JSON.parse(sentenceKey);
-            return <SentenceContent key={sentence.id} sentenceId={count++} dictation={sentence.dictation} answer={sentence.answer} expressions={sentenceList[0][sentenceKey]} />
-        });
+        view = <div>
+            {
+                Object.keys(sentenceList[0]).map((sentenceKey, idx) => {
+                    const sentence = JSON.parse(sentenceKey);
+                    return <SentenceContent key={sentence.id} sentenceId={count++} dictation={sentence.dictation} answer={sentence.answer} expressions={sentenceList[0][sentenceKey]} />
+                })
+            }
+        </div>
+    }
+
+    /*props.date === today일 경우에만 버튼을 렌더링*/
+    let btn = <div></div>;
+    if (props.date === DateFormatConverter(new Date())) {
+        btn = <button onClick={() => window.location = "/sentence"}>Sentence 추가</button>;
+    }
+
+    /*props.date === today와 아닌 경우를 구분해서 타이틀을 출력*/
+    let title;
+    if (props.date === DateFormatConverter(new Date())) {
+        title = <h3>Today's sentences!</h3>;
+    } else {
+        title = <h3>{props.date}</h3>;
     }
 
     return (
         <div>
-            <h3>Today's sentences!</h3>
+            {title}
             <div>
                 {view}
             </div>
             <div>
-                <button onClick={() => window.location = "/sentence"}>Sentence 추가</button>
+                {btn}
             </div>
         </div>
     )
@@ -47,7 +72,6 @@ function TodayDiary(props) {
 
 
 function SentenceContent(props) {
-    console.log(props.expressions);
     let view = props.expressions.map((expression) => <li key={expression.id}>
         <ExpressionContent key={expression.id} id={expression.id} word={expression.word} exLine={expression.exLine} myLine={expression.myLine}/>
     </li>)
@@ -87,4 +111,4 @@ function ExpressionContent(props) {
     )
 }
 
-export default TodayDiary;
+export default Diary;

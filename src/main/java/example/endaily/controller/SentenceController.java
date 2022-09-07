@@ -28,4 +28,5 @@ public class SentenceController {
         dto.setDate(date);
         return sentenceService.findOneWithExpressionsToday(dto);
     }
+
 }

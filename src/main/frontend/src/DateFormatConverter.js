@@ -8,7 +8,7 @@ function leftPad(target) {
 
 function dateFormatConverter(target, delimiter = '-') {
     const year = target.getFullYear();
-    const month = leftPad(target.getMonth());
+    const month = leftPad(target.getMonth()+1);
     const day = leftPad(target.getDate());
     return [year, month, day].join(delimiter);
 }
