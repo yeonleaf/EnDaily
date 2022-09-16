@@ -1,4 +1,5 @@
 package example.endaily.controller;
+import example.endaily.dto.ExpressionDTO;
 import example.endaily.dto.MyLineDTO;
 import example.endaily.dto.SentenceExpressionDTO;
 import example.endaily.service.ExpressionService;
@@ -22,5 +23,15 @@ public class ExpressionController {
     @PatchMapping
     public void setExpressionMyLine(@RequestBody MyLineDTO dto) {
         expressionService.setMyLine(dto);
+    }
+
+    @PutMapping
+    public void update(@RequestBody ExpressionDTO dto) {
+        expressionService.update(dto);
+    }
+
+    @DeleteMapping
+    public void deleteExpression(@RequestParam(name = "expressionId") Long expressionId) {
+        expressionService.delete(expressionId);
     }
 }

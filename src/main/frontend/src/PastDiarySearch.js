@@ -13,7 +13,7 @@ function PastDiarySearch(props) {
     /*검색이 가능한 날짜의 최대값 (어제) 설정*/
     let d = new Date();
     d.setDate(d.getDate() - 1);
-    const [qDate, setQDate] = useState(null);
+    const [qDate, setQDate] = useState(d);
     const [clicked, setClicked] = useState(false);
 
     /*버튼 클릭 */
@@ -34,7 +34,7 @@ function PastDiarySearch(props) {
 
     return (
         <div>
-            <input id="qDate" name="qDate" type="date" max={DateFormatConverter(qDate)} onChange={handleQDateChange}/>
+            <input id="qDate" name="qDate" type="date" max={DateFormatConverter(d)} onChange={handleQDateChange}/>
             <button onClick={handleClick}>Search!</button>
             {queryResult}
         </div>

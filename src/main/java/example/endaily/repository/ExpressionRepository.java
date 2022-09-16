@@ -1,6 +1,7 @@
 package example.endaily.repository;
 
 import example.endaily.domain.Expression;
+import example.endaily.dto.ExpressionDTO;
 import example.endaily.dto.MyLineDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -33,5 +34,18 @@ public class ExpressionRepository {
         return em.createQuery("select ex from Expression ex where ex.sentence.id = :sentenceId")
                 .setParameter("sentenceId", sentenceId)
                 .getResultList();
+    }
+
+    public void update(ExpressionDTO dto) {
+        Expression expression = findOne(dto.getId());
+        expression.setWord(dto.getWord());
+        expression.setMeaning(dto.getMeaning());
+        expression.setExLine(dto.getExLine());
+        expression.setMyLine(dto.getMyLine());
+    }
+
+    public void delete(Long expressionId) {
+        Expression expression = findOne(expressionId);
+        em.remove(expression);
     }
 }

@@ -71,7 +71,7 @@ function SentenceSave(props) {
         }
         console.log(data);
         API.post("/sentence", data).then((response) => {
-            window.location = "/main";
+            window.location = "/diary/today";
         }).catch((error) => {
             console.log(error);
         })

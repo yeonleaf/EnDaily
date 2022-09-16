@@ -12,8 +12,6 @@ function Diary(props) {
 
     const [sentenceList, setSentenceList] = useState([]);
 
-    console.log(props.date);
-
     useEffect(() => {
         /*axios get -> date로 sentence list 조회*/
         API.get("/sentence/sentences?memberId="+memberId+"&date="+props.date)

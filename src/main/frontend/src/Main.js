@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {Route, Link} from "react-router-dom";
 import Diary from "./Diary"
-import DiarySearch from "./DiarySearch";
 import DateFormatConverter from "./DateFormatConverter";
 
 function Main(props) {

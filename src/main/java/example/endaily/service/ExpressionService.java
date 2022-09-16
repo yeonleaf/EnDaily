@@ -31,4 +31,12 @@ public class ExpressionService {
     public void setMyLine(MyLineDTO dto) {
         expressionRepository.setMyLine(dto);
     }
+
+    public void update(ExpressionDTO dto) {
+        expressionRepository.update(dto);
+    }
+
+    public void delete(Long expressionId) {
+        expressionRepository.delete(expressionId);
+    }
 }
