@@ -28,6 +28,10 @@ public class SentenceService {
     private final SentenceRepository sentenceRepository;
     private final ExpressionRepository expressionRepository;
 
+
+    /*
+    * 등록
+    * */
     public void saveOneWithExpressions(MemberSentenceExpressionDTO dto) {
         Member member = memberRepository.findOne(dto.getMemberId());
         /*sentence 저장 (expression update 이전)*/
@@ -50,11 +54,19 @@ public class SentenceService {
         sentenceRepository.updateExpressions(findOne.getId(), findExpressions);
     }
 
+    /*
+    * 조회
+    * */
     public Sentence fineOne(Long sentenceId) {
         return sentenceRepository.findOne(sentenceId);
     }
 
     public HashMap<String, List<ExpressionDTO>> findOneWithExpressionsToday(MemberDateDTO dto) {
         return sentenceRepository.findOneWithExpressionsToday(dto.getMemberId(), new StringToLocalDateConverter().convert(dto.getDate()));
+    }
+
+    public List<SentenceDTO> findSentencesForDate(MemberDateDTO dto) {
+        return sentenceRepository.findSentencesForDate(dto);
+
     }
 }

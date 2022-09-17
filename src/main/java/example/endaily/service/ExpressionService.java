@@ -7,6 +7,9 @@ import example.endaily.repository.ExpressionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class ExpressionService {
@@ -38,5 +41,9 @@ public class ExpressionService {
 
     public void delete(Long expressionId) {
         expressionRepository.delete(expressionId);
+    }
+
+    public List<ExpressionDTO> findExpressionsBySentenceId(Long sentenceId) {
+        return expressionRepository.findExpressionsBySentenceId(sentenceId).stream().map(ExpressionDTO::new).collect(Collectors.toList());
     }
 }

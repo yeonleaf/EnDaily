@@ -1,6 +1,7 @@
 import React, {Component, useEffect, useState} from "react";
 import API from "./API";
 import DateFormatConverter from "./DateFormatConverter";
+import ExpressionList from "./ExpressionList";
 
 function Diary(props) {
 
@@ -16,32 +17,31 @@ function Diary(props) {
         /*axios get -> date로 sentence list 조회*/
         API.get("/sentence/sentences?memberId="+memberId+"&date="+props.date)
             .then(function(response) {
-                setSentenceList(prevState => [...prevState, response.data]);
+                setSentenceList(prevState => response.data);
             })
             .catch(function(response) {
                 console.log(response);
             })
     }, [props.date])
 
-
+    console.log(sentenceList);
     /*sentences 조회 결과에 따라 view를 분기 처리*/
     let view;
-    if (sentenceList.length === 0 || Object.keys(sentenceList[0]).length === 0) {
+    if (sentenceList.length === 0) {
         view = <div>데이터가 없습니다.</div>
     } else {
         let count = 1;
         view = <div>
             {
-                Object.keys(sentenceList[0]).map((sentenceKey, idx) => {
-                    const sentence = JSON.parse(sentenceKey);
-                    return <SentenceContent key={sentence.id} sentenceId={count++} dictation={sentence.dictation} answer={sentence.answer} expressions={sentenceList[0][sentenceKey]} />
+                sentenceList.map((sentence) => {
+                    return <SentenceContent key={count++} sentenceId={sentence.id} viewId={count} dictation={sentence.dictation} answer={sentence.answer} />
                 })
             }
         </div>
     }
 
     /*props.date === today일 경우에만 버튼을 렌더링*/
-    let btn = <div></div>;
+    let btn = <div/>;
     if (props.date === DateFormatConverter(new Date())) {
         btn = <button onClick={() => window.location = "/sentence"}>Sentence 추가</button>;
     }
@@ -70,14 +70,25 @@ function Diary(props) {
 
 
 function SentenceContent(props) {
-    let view = props.expressions.map((expression) => <li key={expression.id}>
-        <ExpressionContent key={expression.id} id={expression.id} word={expression.word} exLine={expression.exLine} myLine={expression.myLine}/>
-    </li>)
 
+    const [expressions, setExpressions] = useState([]);
+
+    /*expressions 조회*/
+    useEffect(() => {
+        API.get("/expression/expressions?sentenceId=" + props.sentenceId)
+            .then(response => {
+                setExpressions(response.data);
+            })
+            .catch(error => console.log(error));
+    }, [])
+
+    const updateExpression = (data) => {
+        setExpressions(prevState => [...data]);
+    }
     return (
         <div>
             <div>
-                <h5>{props.sentenceId}번 sentence</h5>
+                <h5>{props.viewId}번 sentence</h5>
             </div>
             <div>
                 Dictation: {props.dictation}
@@ -86,24 +97,7 @@ function SentenceContent(props) {
                 Answer: {props.answer}
             </div>
             <div>
-                {view}
-            </div>
-        </div>
-    )
-}
-
-
-function ExpressionContent(props) {
-    return (
-        <div>
-            <div>
-                <h6>Word: {props.word}</h6>
-            </div>
-            <div>
-                ExLine: {props.exLine}
-            </div>
-            <div>
-                MyLine: {props.myLine}
+                <ExpressionList expressions={expressions} updateExpression={updateExpression} />
             </div>
         </div>
     )

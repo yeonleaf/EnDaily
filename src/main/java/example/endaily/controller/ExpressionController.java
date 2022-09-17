@@ -6,6 +6,8 @@ import example.endaily.service.ExpressionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -18,6 +20,11 @@ public class ExpressionController {
     @PostMapping
     public void save(@RequestBody SentenceExpressionDTO dto) {
         expressionService.save(dto);
+    }
+
+    @GetMapping("/expressions")
+    public List<ExpressionDTO> findExpressionsBySentenceId(@RequestParam(name = "sentenceId") Long sentenceId) {
+        return expressionService.findExpressionsBySentenceId(sentenceId);
     }
 
     @PatchMapping

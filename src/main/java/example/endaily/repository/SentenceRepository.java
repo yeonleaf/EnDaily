@@ -2,10 +2,12 @@ package example.endaily.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import example.endaily.converter.StringToLocalDateConverter;
 import example.endaily.domain.Expression;
 import example.endaily.domain.Sentence;
 import example.endaily.dto.ExpressionDTO;
 import example.endaily.dto.ExpressionSaveDTO;
+import example.endaily.dto.MemberDateDTO;
 import example.endaily.dto.SentenceDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -35,7 +37,6 @@ public class SentenceRepository {
 
         Gson gson = new Gson();
 
-
         HashMap<String, List<ExpressionDTO>> result = new HashMap<>();
 
         List<Sentence> resultList = em.createQuery("select distinct s from Sentence s join fetch s.expressions where s.member.id = :memberId and s.date = :date", Sentence.class)
@@ -59,5 +60,16 @@ public class SentenceRepository {
     public void updateExpressions(Long sentenceId, List<Expression> expressions) {
         Sentence sentence = findOne(sentenceId);
         sentence.updateExpressions(expressions);
+    }
+
+    public List<SentenceDTO> findSentencesForDate(MemberDateDTO dto) {
+        LocalDate date = new StringToLocalDateConverter().convert(dto.getDate());
+        return em.createQuery("select s from Sentence s where s.member.id=:memberId and s.date=:date", Sentence.class)
+                .setParameter("memberId", dto.getMemberId())
+                .setParameter("date", date)
+                .getResultList()
+                .stream()
+                .map(SentenceDTO::new)
+                .collect(Collectors.toList());
     }
 }

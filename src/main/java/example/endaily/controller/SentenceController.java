@@ -21,12 +21,20 @@ public class SentenceController {
         sentenceService.saveOneWithExpressions(dto);
     }
 
-    @GetMapping("/sentences")
+    // @GetMapping("/sentences")
     public HashMap<String, List<ExpressionDTO>> findOneWithExpressionsToday(@RequestParam(name = "memberId") Long memberId, @RequestParam(name = "date") String date) {
         MemberDateDTO dto = new MemberDateDTO();
         dto.setMemberId(memberId);
         dto.setDate(date);
         return sentenceService.findOneWithExpressionsToday(dto);
+    }
+
+    @GetMapping("/sentences")
+    public List<SentenceDTO> findSentencesForDate(@RequestParam(name = "memberId") Long memberId, @RequestParam(name = "date") String date) {
+        MemberDateDTO dto = new MemberDateDTO();
+        dto.setMemberId(memberId);
+        dto.setDate(date);
+        return sentenceService.findSentencesForDate(dto);
     }
 
 }
