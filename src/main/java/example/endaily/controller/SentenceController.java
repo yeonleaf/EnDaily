@@ -37,4 +37,14 @@ public class SentenceController {
         return sentenceService.findSentencesForDate(dto);
     }
 
+    @PutMapping
+    public void update(@RequestBody SentenceDTO dto) {
+        sentenceService.update(dto);
+    }
+
+    @DeleteMapping
+    public void delete(@RequestParam(name = "sentenceId") Long sentenceId) {
+        sentenceService.delete(sentenceId);
+    }
+
 }

@@ -2,11 +2,13 @@ package example.endaily.dto;
 
 import example.endaily.domain.Sentence;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Getter @Setter
+@NoArgsConstructor
 public class SentenceDTO {
     private Long id;
     private LocalDate date;

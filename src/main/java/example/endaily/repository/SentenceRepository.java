@@ -25,10 +25,16 @@ import java.util.stream.Collectors;
 public class SentenceRepository {
     private final EntityManager em;
 
+    /*
+    * 등록
+    * */
     public void save(Sentence sentence) {
         em.persist(sentence);
     }
 
+    /*
+    * 조회
+    * */
     public Sentence findOne(Long sentenceId) {
         return em.find(Sentence.class, sentenceId);
     }
@@ -57,11 +63,6 @@ public class SentenceRepository {
                 .getSingleResult();
     }
 
-    public void updateExpressions(Long sentenceId, List<Expression> expressions) {
-        Sentence sentence = findOne(sentenceId);
-        sentence.updateExpressions(expressions);
-    }
-
     public List<SentenceDTO> findSentencesForDate(MemberDateDTO dto) {
         LocalDate date = new StringToLocalDateConverter().convert(dto.getDate());
         return em.createQuery("select s from Sentence s where s.member.id=:memberId and s.date=:date", Sentence.class)
@@ -71,5 +72,27 @@ public class SentenceRepository {
                 .stream()
                 .map(SentenceDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    /*
+    * 수정
+    * */
+    public void updateExpressions(Long sentenceId, List<Expression> expressions) {
+        Sentence sentence = findOne(sentenceId);
+        sentence.updateExpressions(expressions);
+    }
+
+    public void update(SentenceDTO dto) {
+        Sentence sentence = findOne(dto.getId());
+        sentence.setDictation(dto.getDictation());
+        sentence.setAnswer(dto.getAnswer());
+    }
+
+    /*
+    * 삭제
+    * */
+    public void delete(Long sentenceId) {
+        Sentence sentence = findOne(sentenceId);
+        em.remove(sentence);
     }
 }

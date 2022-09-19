@@ -18,8 +18,8 @@ public class ExpressionController {
     private final ExpressionService expressionService;
 
     @PostMapping
-    public void save(@RequestBody SentenceExpressionDTO dto) {
-        expressionService.save(dto);
+    public Long save(@RequestBody SentenceExpressionDTO dto) {
+        return expressionService.save(dto);
     }
 
     @GetMapping("/expressions")

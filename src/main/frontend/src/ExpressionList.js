@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import API from "./API";
 import KoreanExistValidator from "./KoreanExistValidator";
+import DateFormatConverter from "./DateFormatConverter";
 
 function ExpressionList(props) {
     let keyCount = 0;
@@ -10,7 +11,7 @@ function ExpressionList(props) {
     return (
         <div>
             {expressions.map(
-                (expression) => <Expression key={keyCount++} id={expression.id} word={expression.word} meaning={expression.meaning} exLine={expression.exLine} myLine={expression.myLine} expressions={props.expressions} updateExpression={props.updateExpression} addExpression={props.addExpression}/>
+                (expression) => <div key={keyCount++}><Expression key={keyCount} id={expression.id} date={props.date} word={expression.word} meaning={expression.meaning} exLine={expression.exLine} myLine={expression.myLine} expressions={props.expressions} updateExpression={props.updateExpression} addExpression={props.addExpression}/></div>
             )}
         </div>
     )
@@ -104,12 +105,16 @@ function Expression(props) {
         </div>
     } else {
         let editCond = editFlag ? <ExpressionEditForm word={props.word} meaning={props.meaning} exLine={props.exLine} myLine={myLine} handleEdit={handleEdit}/> : <ExpressionContentView word={props.word} meaning={props.meaning} exLine={props.exLine} myLine={props.myLine}/>
+        if (props.date === DateFormatConverter(new Date())) {
+            myLineCond = <div>
+                <button onClick={handleEditFlagChange}>EDT</button>
+                <button onClick={handleDelete}>DEL</button>
+                {editCond}
+            </div>
+        } else {
+            myLineCond = <div>{editCond}</div>
+        }
 
-        myLineCond = <div>
-            <button onClick={handleEditFlagChange}>EDT</button>
-            <button onClick={handleDelete}>DEL</button>
-            {editCond}
-        </div>
     }
 
     return (

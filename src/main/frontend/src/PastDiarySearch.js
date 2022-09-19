@@ -13,6 +13,7 @@ function PastDiarySearch(props) {
     /*검색이 가능한 날짜의 최대값 (어제) 설정*/
     let d = new Date();
     d.setDate(d.getDate() - 1);
+
     const [qDate, setQDate] = useState(d);
     const [clicked, setClicked] = useState(false);
 

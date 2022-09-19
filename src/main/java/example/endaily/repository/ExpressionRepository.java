@@ -17,8 +17,9 @@ public class ExpressionRepository {
 
     private final EntityManager em;
 
-    public void save(Expression expression) {
+    public Long save(Expression expression) {
         em.persist(expression);
+        return expression.getId();
     }
 
     public Expression findOne(Long expressionId) {

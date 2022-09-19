@@ -16,10 +16,10 @@ public class ExpressionService {
     private final ExpressionRepository expressionRepository;
     private final SentenceService sentenceService;
 
-    public void save(SentenceExpressionDTO dto) {
+    public Long save(SentenceExpressionDTO dto) {
         Sentence sentence = sentenceService.fineOne(dto.getSentenceId());
         Expression expression = new Expression(sentence, makeExpressionSaveDTO(dto));
-        expressionRepository.save(expression);
+        return expressionRepository.save(expression);
     }
 
     private ExpressionSaveDTO makeExpressionSaveDTO(SentenceExpressionDTO dto) {

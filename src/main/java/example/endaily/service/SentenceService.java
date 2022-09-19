@@ -69,4 +69,22 @@ public class SentenceService {
         return sentenceRepository.findSentencesForDate(dto);
 
     }
+
+    /*
+    * 수정
+    * */
+    public void update(SentenceDTO dto) {
+        sentenceRepository.update(dto);
+    }
+
+    /*
+    * 삭제
+    * */
+    public void delete(Long sentenceId) {
+        /*sentenceId를 외래키로 가지고 있는 모든 expression 삭제*/
+        expressionRepository.findExpressionsBySentenceId(sentenceId).stream().forEach(expression -> expressionRepository.delete(expression.getId()));
+
+        /*sentence 삭제*/
+        sentenceRepository.delete(sentenceId);
+    }
 }

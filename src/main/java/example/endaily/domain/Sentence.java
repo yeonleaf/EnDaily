@@ -3,13 +3,14 @@ package example.endaily.domain;
 import example.endaily.dto.ExpressionSaveDTO;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
+@Getter @Setter
 @Entity
 @RequiredArgsConstructor
 public class Sentence {
