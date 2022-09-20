@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
-import API from "./API";
+import API from "../common/API";
 import $ from 'jquery';
-import DateTimeFormatConverter from "./DateTimeFormatConverter";
+import DateTimeFormatConverter from "../utils/DateTimeFormatConverter";
 
 function WordsSearch(props) {
 

@@ -1,13 +1,13 @@
-import React, {Component, useState} from "react";
-import API from "./API";
+import React, {useState} from "react";
+import API from "../common/API";
 
-const Login = () => {
+const Join = () => {
     return (
-        <LoginComp />
+        <JoinComp />
     )
 }
 
-function LoginComp(props) {
+function JoinComp(props) {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -17,20 +17,16 @@ function LoginComp(props) {
 
     function handleClick(event) {
         event.preventDefault();
-
         setEmailMsg([]);
         setPasswordMsg([]);
 
-        API.post('/member/login', {
+        API.post('/member/join', {
             email: email,
             password: password
-        }).then(function(response) {
-            console.log(response.data);
-            sessionStorage.setItem("memberId", response.data);
-            window.location = "/main";
-        }).catch(function(error) {
+        }).then(function (response) {
+            window.location = "/login";
+        }).catch(function (error) {
             let msgList = error.response.data.msgList;
-            console.log(msgList);
             msgList.forEach(obj => {
                 if (obj.field === "email") {
                     setEmailMsg(prevState => [...prevState, [obj.keyCnt, obj.errMsg]]);
@@ -39,7 +35,6 @@ function LoginComp(props) {
                 }
             })
         })
-
     }
 
     function handleEmail(event) {
@@ -55,7 +50,7 @@ function LoginComp(props) {
 
     return (
         <div>
-            <div>Login!</div>
+            <div>Join!</div>
             <div>
                 <label>
                     Email:
@@ -77,4 +72,4 @@ function LoginComp(props) {
     );
 }
 
-export default Login;
+export default Join;

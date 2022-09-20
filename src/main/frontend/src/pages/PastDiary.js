@@ -1,8 +1,9 @@
-import {useState, useEffect} from "react";
-import Diary from "./Diary";
-import DateFormatConverter from "./DateFormatConverter";
+import {useState} from "react";
 
-function PastDiarySearch(props) {
+import Diary from "../Diary/Diary";
+import DateFormatConverter from "../utils/DateFormatConverter";
+
+function PastDiary(props) {
 
     /*로그인 확인*/
     let memberId = sessionStorage.getItem("memberId");
@@ -44,4 +45,4 @@ function PastDiarySearch(props) {
 
 
 
-export default PastDiarySearch;
+export default PastDiary;
